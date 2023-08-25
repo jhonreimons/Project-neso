@@ -1,0 +1,115 @@
+[
+    {
+        "id": "83885cdcfba23bd0",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "c09009abc70bcbdf",
+        "type": "mqtt in",
+        "z": "83885cdcfba23bd0",
+        "name": "",
+        "topic": "sensor/soilmoisture",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "df00cde55384e7e4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 260,
+        "wires": [
+            [
+                "2de9ebad8815e22e"
+            ]
+        ]
+    },
+    {
+        "id": "368f9c077b6f7f36",
+        "type": "debug",
+        "z": "83885cdcfba23bd0",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "89121c0c87fd88c3",
+        "type": "mysql",
+        "z": "83885cdcfba23bd0",
+        "mydb": "be1b91edcbdbfd49",
+        "name": "data_neso",
+        "x": 770,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2de9ebad8815e22e",
+        "type": "function",
+        "z": "83885cdcfba23bd0",
+        "name": "neso",
+        "func": "// Menyiapkan data yang akan dimasukkan ke dalam database\nvar sensor_id = msg.payload.sensor_id;\nvar soil_moisture = msg.payload.soil_moisture;\n\n// Menyiapkan query untuk memasukkan data ke dalam tabel\nvar insertQuery = `INSERT INTO nesodb (id, value) VALUES ('${sensor_id}', ${soil_moisture})`;\n\n// Mengirimkan query ke node MySQL\nmsg.topic = insertQuery;\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 260,
+        "wires": [
+            [
+                "89121c0c87fd88c3",
+                "368f9c077b6f7f36"
+            ]
+        ]
+    },
+    {
+        "id": "df00cde55384e7e4",
+        "type": "mqtt-broker",
+        "name": "localhost",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "TEST",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "be1b91edcbdbfd49",
+        "type": "MySQLdatabase",
+        "name": "nesodb",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "neso",
+        "tz": "",
+        "charset": "UTF8"
+    }
+]
